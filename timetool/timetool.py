@@ -96,7 +96,7 @@ def update_mtime_if_older(
     *,
     path: Path,
     mtime: tuple[int, int],
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
     assert isinstance(mtime, tuple)
     assert isinstance(mtime[0], int)
@@ -202,9 +202,9 @@ def humanize_history_dict(history):
 @click.pass_context
 def cli(
     ctx,
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ):
 
     ctx.ensure_object(dict)
@@ -222,9 +222,9 @@ def cli(
 def _timestamp_to_human_duration(
     ctx,
     timestamps: Sequence[str],
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ) -> None:
 
     tty, verbose = tv(
@@ -272,9 +272,9 @@ def _timestamp_to_human_duration(
 def _timestamp_to_human_date(
     ctx,
     timestamps: Sequence[str],
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ) -> None:
 
     tty, verbose = tv(
