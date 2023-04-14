@@ -206,7 +206,6 @@ def cli(
     dict_output: bool,
     verbose: bool | int | float = False,
 ):
-
     ctx.ensure_object(dict)
     tty, verbose = tv(
         ctx=ctx,
@@ -226,7 +225,6 @@ def _timestamp_to_human_duration(
     dict_output: bool,
     verbose: bool | int | float = False,
 ) -> None:
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
@@ -276,7 +274,6 @@ def _timestamp_to_human_date(
     dict_output: bool,
     verbose: bool | int | float = False,
 ) -> None:
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
