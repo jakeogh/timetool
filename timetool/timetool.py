@@ -21,8 +21,6 @@
 # pylint: disable=no-member                       # [E1101] no member for base
 # pylint: disable=attribute-defined-outside-init  # [W0201]
 # pylint: disable=too-many-boolean-expressions    # [R0916] in if statement
-
-
 from __future__ import annotations
 
 import errno
@@ -131,12 +129,6 @@ def timeout(seconds, error_message=os.strerror(errno.ETIME)):
         return wraps(func)(wrapper)
 
     return decorator
-
-
-# in epochfilter
-# def human_date_to_timestamp(date):
-#    dt = dateparser(date)
-#    return dt.timestamp()
 
 
 def seconds_duration_to_human_readable(seconds, *, ago: bool, short: bool = True):
@@ -314,7 +306,7 @@ def _timestamp_to_human_date(
 
 
 @cli.command("human-date-to-timestamp")
-@click.argument("timestamps", type=str, nargs=-1)
+@click.argument("human_dates", type=str, nargs=-1)
 @click_add_options(click_global_options)
 @click.pass_context
 def _human_date_to_timestamp(
