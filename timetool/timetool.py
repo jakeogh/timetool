@@ -54,6 +54,25 @@ from unmp import unmp
 signal(SIGPIPE, SIG_DFL)
 
 
+def timeout(seconds, error_message=os.strerror(errno.ETIME)):
+    def decorator(func):
+        def _handle_timeout(signum, frame):
+            raise TimeoutError(error_message)
+
+        def wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, _handle_timeout)
+            signal.alarm(seconds)
+            try:
+                result = func(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+            return result
+
+        return wraps(func)(wrapper)
+
+    return decorator
+
+
 def get_timestamp():
     stamp = str("%.22f" % time.time())
     return stamp
@@ -112,26 +131,12 @@ def update_mtime_if_older(
         os.utime(path, ns=mtime, follow_symlinks=False)
 
 
-def timeout(seconds, error_message=os.strerror(errno.ETIME)):
-    def decorator(func):
-        def _handle_timeout(signum, frame):
-            raise TimeoutError(error_message)
-
-        def wrapper(*args, **kwargs):
-            signal.signal(signal.SIGALRM, _handle_timeout)
-            signal.alarm(seconds)
-            try:
-                result = func(*args, **kwargs)
-            finally:
-                signal.alarm(0)
-            return result
-
-        return wraps(func)(wrapper)
-
-    return decorator
-
-
-def seconds_duration_to_human_readable(seconds, *, ago: bool, short: bool = True):
+def seconds_duration_to_human_readable(
+    seconds,
+    *,
+    ago: bool,
+    short: bool = True,
+):
     if seconds is None:
         return None
     seconds = float(seconds)
@@ -208,6 +213,64 @@ def cli(
         verbose=verbose,
         verbose_inf=verbose_inf,
     )
+
+
+@cli.command("amtime")
+@click.argument(
+    "paths",
+    type=click.Path(
+        exists=False,
+        dir_okay=True,
+        file_okay=False,
+        allow_dash=False,
+        path_type=Path,
+    ),
+    nargs=-1,
+)
+@click_add_options(click_global_options)
+@click.pass_context
+def _amtime(
+    ctx,
+    paths: tuple[str, ...],
+    verbose_inf: bool,
+    dict_output: bool,
+    verbose: bool | int | float = False,
+) -> None:
+    tty, verbose = tv(
+        ctx=ctx,
+        verbose=verbose,
+        verbose_inf=verbose_inf,
+    )
+
+    if not verbose:
+        ic.disable()
+
+    if paths:
+        iterator = paths
+    else:
+        iterator = unmp(
+            valid_types=[
+                bytes,
+            ],
+            verbose=verbose,
+        )
+    del paths
+
+    index = 0
+    for index, _mpobject in enumerate(iterator):
+        ic(index, _mpobject)
+        _path = Path(os.fsdecode(_mpobject)).resolve()
+
+        _amtime = get_amtime(_path)
+        ic(_amtime)
+
+        output(
+            _amtime,
+            reason=None,
+            dict_output=dict_output,
+            tty=tty,
+            verbose=verbose,
+        )
 
 
 @cli.command("timestamp-to-human-duration")
