@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
 
-import fastentrypoints
 from setuptools import find_packages
 from setuptools import setup
 
-dependencies = ["click", "dateparser @ https://github.com/scrapinghub/dateparser"]
+import fastentrypoints
+
+dependencies = [
+    "click",
+    "pytz",
+    "dateparser @ https://github.com/scrapinghub/dateparser",
+    "humanize @ https://github.com/jmoiron/humanize.git",
+]
 
 config = {
     "version": "0.1",
