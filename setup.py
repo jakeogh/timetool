@@ -11,6 +11,7 @@ dependencies = [
     "pytz",
     "dateparser @ https://github.com/scrapinghub/dateparser",
     "humanize @ https://github.com/jmoiron/humanize.git",
+    "asserttool @ https://github.com/jakeogh/asserttool.git",
 ]
 
 config = {
