@@ -9,9 +9,9 @@ import fastentrypoints
 dependencies = [
     "click",
     "pytz",
-    "dateparser @ https://github.com/scrapinghub/dateparser",
-    "humanize @ https://github.com/jmoiron/humanize.git",
-    "asserttool @ https://github.com/jakeogh/asserttool.git",
+    "dateparser @ git+https://github.com/scrapinghub/dateparser",
+    "humanize @ git+https://github.com/jmoiron/humanize",
+    "asserttool @ git+https://git@github.com/jakeogh/asserttool",
 ]
 
 config = {
