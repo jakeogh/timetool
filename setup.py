@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
+import fastentrypoints
 from setuptools import find_packages
 from setuptools import setup
 
-import fastentrypoints
-
-dependencies = ["click"]
+dependencies = ["click", "dateparser @ https://github.com/scrapinghub/dateparser"]
 
 config = {
     "version": "0.1",
