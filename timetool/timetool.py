@@ -73,9 +73,10 @@ def timeout(seconds, error_message=os.strerror(errno.ETIME)):
     return decorator
 
 
-def get_timestamp():
-    stamp = str("%.22f" % time.time())
-    return stamp
+# from timestamptool import get_timestamp
+# def get_timestamp():
+#    stamp = str("%.22f" % time.time())
+#    return stamp
 
 
 def timestamp_to_epoch(date_time: str):
@@ -117,7 +118,7 @@ def update_mtime_if_older(
     *,
     path: Path,
     mtime: tuple[int, int],
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     assert isinstance(mtime, tuple)
     assert isinstance(mtime[0], int)
@@ -205,7 +206,7 @@ def cli(
     ctx,
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     ctx.ensure_object(dict)
     tty, verbose = tv(
@@ -234,7 +235,7 @@ def _amtime(
     paths: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ) -> None:
     tty, verbose = tv(
         ctx=ctx,
@@ -282,7 +283,7 @@ def _timestamp_to_human_duration(
     timestamps: Sequence[str],
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ) -> None:
     tty, verbose = tv(
         ctx=ctx,
@@ -331,7 +332,7 @@ def _timestamp_to_human_date(
     timestamps: Sequence[str],
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ) -> None:
     tty, verbose = tv(
         ctx=ctx,
@@ -377,7 +378,7 @@ def _human_date_to_timestamp(
     human_dates: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ) -> None:
     tty, verbose = tv(
         ctx=ctx,
