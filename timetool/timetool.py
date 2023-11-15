@@ -41,13 +41,15 @@ from asserttool import ic
 from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
-from clicktool import tv
+from clicktool import tvicgvd
 from eprint import eprint
-from humanize import naturaldelta
+from globalverbose import gvd
 from humanize import naturaltime
 from humanize import precisedelta
 from mptool import output
 from unmp import unmp
+
+# from humanize import naturaldelta
 
 # from unitcalc import convert
 
@@ -126,9 +128,7 @@ def update_mtime_if_older(
     current_mtime = get_amtime(path)
     if current_mtime[1] > mtime[1]:
         if verbose:
-            eprint(
-                "{} old: {} new: {}".format(path.as_posix(), current_mtime[1], mtime[1])
-            )
+            eprint(f"{path.as_posix()} old: {current_mtime[1]} new: {mtime[1]}")
         os.utime(path, ns=mtime, follow_symlinks=False)
 
 
@@ -209,10 +209,12 @@ def cli(
     verbose: bool = False,
 ):
     ctx.ensure_object(dict)
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
 
@@ -237,10 +239,12 @@ def _amtime(
     dict_output: bool,
     verbose: bool = False,
 ) -> None:
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     if not verbose:
@@ -285,10 +289,12 @@ def _timestamp_to_human_duration(
     dict_output: bool,
     verbose: bool = False,
 ) -> None:
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     if timestamps:
@@ -334,10 +340,12 @@ def _timestamp_to_human_date(
     dict_output: bool,
     verbose: bool = False,
 ) -> None:
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     if timestamps:
@@ -380,10 +388,12 @@ def _human_date_to_timestamp(
     dict_output: bool,
     verbose: bool = False,
 ) -> None:
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     if human_dates:
