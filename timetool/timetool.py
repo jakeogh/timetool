@@ -75,12 +75,6 @@ def timeout(seconds, error_message=os.strerror(errno.ETIME)):
     return decorator
 
 
-# from timestamptool import get_timestamp
-# def get_timestamp():
-#    stamp = str("%.22f" % time.time())
-#    return stamp
-
-
 def timestamp_to_epoch(date_time: str):
     # date_time = '2016-03-14T18:54:56.1942132'.split('.')[0]
     date_time = date_time.split(".")[0]
@@ -94,9 +88,10 @@ def timeit(f):
         ts = time.time()
         result = f(*args, **kw)
         te = time.time()
-        eprint(
-            "func:%r args:[%r, %r] took: %2.4f sec" % (f.__name__, args, kw, te - ts)
-        )
+        # eprint(
+        #    "func:%r args:[%r, %r] took: %2.4f sec" % (f.__name__, args, kw, te - ts)
+        # )
+        eprint(f"func:{f.__name__} took: {te-ts} sec")
         return result
 
     return timed
