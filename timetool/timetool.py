@@ -91,7 +91,7 @@ def timeit(f):
         # eprint(
         #    "func:%r args:[%r, %r] took: %2.4f sec" % (f.__name__, args, kw, te - ts)
         # )
-        eprint(f"func:{f.__name__} took: {te-ts} sec")
+        eprint(f"func:{f.__name__} took: {te-ts: .3f} sec")
         return result
 
     return timed
