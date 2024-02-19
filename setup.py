@@ -12,6 +12,7 @@ dependencies = [
     "dateparser @ git+https://github.com/scrapinghub/dateparser",
     "humanize @ git+https://github.com/jmoiron/humanize",
     "asserttool @ git+https://git@github.com/jakeogh/asserttool",
+    "clicktool @ git+https://git@github.com/jakeogh/clicktool",
 ]
 
 config = {
