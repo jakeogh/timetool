@@ -178,7 +178,7 @@ def timestamp_to_human_date(timestamp: str):
     human_date = datetime.fromtimestamp(float(timestamp)).strftime(
         "%Y-%m-%d %H:%M:%S %Z"
     )
-    return human_date
+    return human_date.strip()
 
 
 def day_month_year_to_datetime(*, day: int, month: int, year: int):
