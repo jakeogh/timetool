@@ -88,7 +88,7 @@ def get_year_month_day(timestamp=None):
     if not timestamp:
         timestamp = get_int_timestamp()
     timestamp = int(timestamp)
-    ymd = datetime.datetime.fromtimestamp(timestamp).strftime("%Y_%m_%d")
+    ymd = datetime.fromtimestamp(timestamp).strftime("%Y_%m_%d")
     return ymd
 
 
