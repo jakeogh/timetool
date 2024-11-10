@@ -12,3 +12,4 @@ from .timetool import (
 from .timetool import timeit as timeit
 from .timetool import timestamp_to_human_date as timestamp_to_human_date
 from .timetool import update_mtime_if_older as update_mtime_if_older
+from .timetool import get_year_month_day as get_year_month_day

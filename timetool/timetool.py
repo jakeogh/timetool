@@ -83,6 +83,14 @@ def timestamp_to_epoch(date_time: str):
     return epoch
 
 
+def get_year_month_day(timestamp=None):
+    if not timestamp:
+        timestamp = get_int_timestamp()
+    timestamp = int(timestamp)
+    ymd = datetime.datetime.fromtimestamp(timestamp).strftime("%Y_%m_%d")
+    return ymd
+
+
 def timeit(f):
     def timed(*args, **kw):
         ts = time.time()
