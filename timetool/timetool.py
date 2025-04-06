@@ -176,8 +176,13 @@ def seconds_duration_to_human_readable(
     return result
 
 
-def human_date_to_timestamp(date):
+def human_date_to_datetime(date):
     dt = dateparser.parse(date)
+    return dt
+
+
+def human_date_to_timestamp(date):
+    dt = human_date_to_datetime(date)
     timestamp = dt.timestamp()
     return Decimal(str(timestamp))
 
