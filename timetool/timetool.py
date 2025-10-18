@@ -192,6 +192,131 @@ def humanize_history_dict(history):
     return human_history
 
 
+def amtime(
+    paths: Sequence[Path] | None = None,
+    verbose: bool = False,
+) -> list[tuple[int, int]]:
+    """Get access and modification times for paths.
+
+    Args:
+        paths: Sequence of Path objects to get amtime for
+        verbose: Enable verbose output
+
+    Returns:
+        List of (atime_ns, mtime_ns) tuples
+    """
+    if paths:
+        iterator = paths
+    else:
+        iterator = unmp(
+            valid_types=[
+                bytes,
+            ],
+            verbose=verbose,
+        )
+
+    results = []
+    for index, _mpobject in enumerate(iterator):
+        if verbose:
+            ic(index, _mpobject)
+
+        if isinstance(_mpobject, Path):
+            _path = _mpobject.resolve()
+        else:
+            _path = Path(os.fsdecode(_mpobject)).resolve()
+
+        _amtime = get_amtime(_path)
+        if verbose:
+            ic(_amtime)
+
+        results.append(_amtime)
+
+    return results
+
+
+def timestamp_to_human_duration(
+    timestamps: Sequence[int | str],
+    short: bool = False,
+    verbose: bool = False,
+) -> list[str]:
+    """Convert timestamps (in seconds) to human-readable durations.
+
+    Args:
+        timestamps: Sequence of timestamps in seconds
+        short: Use short format for durations
+        verbose: Enable verbose output
+
+    Returns:
+        List of human-readable duration strings
+    """
+    results = []
+    for index, _timestamp in enumerate(timestamps):
+        if verbose:
+            ic(index, _timestamp)
+
+        _timestamp = int(_timestamp)
+        human_duration = seconds_duration_to_human_readable(
+            _timestamp, ago=False, short=short
+        )
+        if verbose:
+            ic(human_duration)
+
+        results.append(human_duration)
+
+    return results
+
+
+def timestamps_to_human_dates(
+    timestamps: Sequence[int | str],
+    verbose: bool = False,
+) -> list[str]:
+    """Convert Unix timestamps to human-readable dates.
+
+    Args:
+        timestamps: Sequence of Unix timestamps
+        verbose: Enable verbose output
+
+    Returns:
+        List of human-readable date strings
+    """
+    results = []
+    for index, _timestamp in enumerate(timestamps):
+        if verbose:
+            ic(index, _timestamp)
+
+        _timestamp = int(_timestamp)
+        human_timestamp = timestamp_to_human_date(_timestamp)
+
+        results.append(human_timestamp)
+
+    return results
+
+
+def human_dates_to_timestamps(
+    human_dates: Sequence[str],
+    verbose: bool = False,
+) -> list[Decimal]:
+    """Convert human-readable dates to Unix timestamps.
+
+    Args:
+        human_dates: Sequence of human-readable date strings
+        verbose: Enable verbose output
+
+    Returns:
+        List of Unix timestamps as Decimal objects
+    """
+    results = []
+    for index, _date in enumerate(human_dates):
+        if verbose:
+            ic(index, _date)
+
+        _timestamp = human_date_to_timestamp(_date)
+
+        results.append(_timestamp)
+
+    return results
+
+
 @click.group(no_args_is_help=True, cls=AHGroup)
 @click_add_options(click_global_options)
 @click.pass_context
