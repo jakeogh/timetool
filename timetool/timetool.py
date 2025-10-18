@@ -39,10 +39,12 @@ from unmp import unmp
 
 signal(SIGPIPE, SIG_DFL)
 
-F = TypeVar('F', bound=Callable[..., Any])
+F = TypeVar("F", bound=Callable[..., Any])
 
 
-def timeout(seconds: int, error_message: str = os.strerror(errno.ETIME)) -> Callable[[F], F]:
+def timeout(
+    seconds: int, error_message: str = os.strerror(errno.ETIME)
+) -> Callable[[F], F]:
     def decorator(func: F) -> F:
         def _handle_timeout(signum: int, frame: Any) -> None:
             raise TimeoutError(error_message)
@@ -214,15 +216,13 @@ def timestamp_to_human_duration(
     Returns:
         Human-readable duration string
     """
-    if verbose:
-        ic(timestamp)
+    ic(timestamp)
 
     timestamp_int = int(timestamp)
     human_duration = seconds_duration_to_human_readable(
         timestamp_int, ago=False, short=short
     )
-    if verbose:
-        ic(human_duration)
+    ic(human_duration)
 
     if human_duration is None:
         return ""
@@ -233,14 +233,12 @@ def timestamp_to_human_duration(
 def timestamps_to_human_durations(
     timestamps: Sequence[int | str | float],
     short: bool = False,
-    verbose: bool = False,
 ) -> list[str]:
     """Convert timestamps (in seconds) to human-readable durations.
 
     Args:
         timestamps: Sequence of timestamps in seconds
         short: Use short format for durations
-        verbose: Enable verbose output
 
     Returns:
         List of human-readable duration strings
@@ -248,7 +246,8 @@ def timestamps_to_human_durations(
     results: list[str] = []
     for timestamp in timestamps:
         human_duration = timestamp_to_human_duration(
-            timestamp, short=short, verbose=verbose
+            timestamp,
+            short=short,
         )
         results.append(human_duration)
 
@@ -257,21 +256,18 @@ def timestamps_to_human_durations(
 
 def timestamps_to_human_dates(
     timestamps: Sequence[int | str | float],
-    verbose: bool = False,
 ) -> list[str]:
     """Convert Unix timestamps to human-readable dates.
 
     Args:
         timestamps: Sequence of Unix timestamps
-        verbose: Enable verbose output
 
     Returns:
         List of human-readable date strings
     """
     results: list[str] = []
     for index, timestamp in enumerate(timestamps):
-        if verbose:
-            ic(index, timestamp)
+        ic(index, timestamp)
 
         human_timestamp = timestamp_to_human_date(timestamp)
         results.append(human_timestamp)
@@ -281,21 +277,18 @@ def timestamps_to_human_dates(
 
 def human_dates_to_timestamps(
     human_dates: Sequence[str],
-    verbose: bool = False,
 ) -> list[Decimal]:
     """Convert human-readable dates to Unix timestamps.
 
     Args:
         human_dates: Sequence of human-readable date strings
-        verbose: Enable verbose output
 
     Returns:
         List of Unix timestamps as Decimal objects
     """
     results: list[Decimal] = []
     for index, date in enumerate(human_dates):
-        if verbose:
-            ic(index, date)
+        ic(index, date)
 
         timestamp = human_date_to_timestamp(date)
         results.append(timestamp)
@@ -362,7 +355,6 @@ def _amtime(
             valid_types=[
                 bytes,
             ],
-            verbose=verbose,
         )
     del paths
 
@@ -379,7 +371,6 @@ def _amtime(
             reason=None,
             dict_output=dict_output,
             tty=tty,
-            verbose=verbose,
         )
 
 
@@ -411,27 +402,25 @@ def _timestamp_to_human_duration(
                 str,
                 int,
             ],
-            verbose=verbose,
         )
     del timestamps
 
     index = 0
     for index, _timestamp in enumerate(iterator):
-        if verbose:
-            ic(index, _timestamp)
+        ic(index, _timestamp)
 
         _timestamp_int = int(_timestamp)
         human_duration = seconds_duration_to_human_readable(
-            _timestamp_int, ago=False, short=False
+            _timestamp_int,
+            ago=False,
+            short=False,
         )
-        ic(human_duration)
 
         output(
             human_duration,
             reason=None,
             dict_output=dict_output,
             tty=tty,
-            verbose=verbose,
         )
 
 
@@ -469,8 +458,7 @@ def _timestamp_to_human_date(
 
     index = 0
     for index, _timestamp in enumerate(iterator):
-        if verbose:
-            ic(index, _timestamp)
+        ic(index, _timestamp)
 
         _timestamp_int = int(_timestamp)
         human_timestamp = timestamp_to_human_date(_timestamp_int)
@@ -480,7 +468,6 @@ def _timestamp_to_human_date(
             reason=None,
             dict_output=dict_output,
             tty=tty,
-            verbose=verbose,
         )
 
 
@@ -512,7 +499,6 @@ def _human_date_to_timestamp(
                 str,
                 int,
             ],
-            verbose=verbose,
         )
     del human_dates
 
@@ -527,5 +513,4 @@ def _human_date_to_timestamp(
             reason=_date,
             dict_output=dict_output,
             tty=tty,
-            verbose=verbose,
         )
