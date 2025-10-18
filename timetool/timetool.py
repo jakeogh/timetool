@@ -6,6 +6,7 @@ from __future__ import annotations
 import errno
 import os
 import time
+from collections.abc import Callable
 from collections.abc import Sequence
 from datetime import datetime
 from decimal import Decimal
@@ -14,6 +15,8 @@ from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
 from signal import signal
+from typing import Any
+from typing import TypeVar
 
 import click
 import dateparser
@@ -36,13 +39,15 @@ from unmp import unmp
 
 signal(SIGPIPE, SIG_DFL)
 
+F = TypeVar('F', bound=Callable[..., Any])
 
-def timeout(seconds, error_message=os.strerror(errno.ETIME)):
-    def decorator(func):
-        def _handle_timeout(signum, frame):
+
+def timeout(seconds: int, error_message: str = os.strerror(errno.ETIME)) -> Callable[[F], F]:
+    def decorator(func: F) -> F:
+        def _handle_timeout(signum: int, frame: Any) -> None:
             raise TimeoutError(error_message)
 
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             signal.signal(signal.SIGALRM, _handle_timeout)
             signal.alarm(seconds)
             try:
@@ -51,19 +56,19 @@ def timeout(seconds, error_message=os.strerror(errno.ETIME)):
                 signal.alarm(0)
             return result
 
-        return wraps(func)(wrapper)
+        return wraps(func)(wrapper)  # type: ignore
 
-    return decorator
+    return decorator  # type: ignore
 
 
-def timestamp_to_epoch(date_time: str):
+def timestamp_to_epoch(date_time: str) -> int:
     date_time = date_time.split(".")[0]
     pattern = "%Y-%m-%dT%H:%M:%S"
     epoch = int(time.mktime(time.strptime(date_time, pattern)))
     return epoch
 
 
-def get_year_month_day(timestamp=None):
+def get_year_month_day(timestamp: int | float | None = None) -> str:
     if not timestamp:
         timestamp = get_int_timestamp()
     timestamp = int(timestamp)
@@ -71,8 +76,8 @@ def get_year_month_day(timestamp=None):
     return ymd
 
 
-def timeit(f):
-    def timed(*args, **kw):
+def timeit(f: F) -> F:
+    def timed(*args: Any, **kw: Any) -> Any:
         ts = time.time()
         result = f(*args, **kw)
         te = time.time()
@@ -82,19 +87,19 @@ def timeit(f):
         eprint(f"func:{f.__name__} took: {te-ts: .3f} sec")
         return result
 
-    return timed
+    return timed  # type: ignore
 
 
-def get_mtime(infile):
+def get_mtime(infile: str | Path) -> float:
     mtime = os.lstat(infile).st_mtime  # does not follow symlinks
     return mtime
 
 
-def get_amtime(infile):
+def get_amtime(infile: str | Path | int) -> tuple[int, int]:
     try:
-        infile_stat = os.lstat(infile)
+        infile_stat = os.lstat(infile)  # type: ignore
     except TypeError:
-        infile_stat = os.lstat(infile.fileno())
+        infile_stat = os.lstat(infile.fileno())  # type: ignore
     amtime = (infile_stat.st_atime_ns, infile_stat.st_mtime_ns)
     return amtime
 
@@ -104,7 +109,7 @@ def update_mtime_if_older(
     path: Path,
     mtime: tuple[int, int],
     verbose: bool = False,
-):
+) -> None:
     assert isinstance(mtime, tuple)
     assert isinstance(mtime[0], int)
     assert isinstance(mtime[1], int)
@@ -116,11 +121,11 @@ def update_mtime_if_older(
 
 
 def seconds_duration_to_human_readable(
-    seconds,
+    seconds: int | float | None,
     *,
     ago: bool,
     short: bool = True,
-):
+) -> str | None:
     if seconds is None:
         return None
     seconds = float(seconds)
@@ -155,18 +160,20 @@ def seconds_duration_to_human_readable(
     return result
 
 
-def human_date_to_datetime(date):
+def human_date_to_datetime(date: str) -> datetime | None:
     dt = dateparser.parse(date)
     return dt
 
 
-def human_date_to_timestamp(date):
+def human_date_to_timestamp(date: str) -> Decimal:
     dt = human_date_to_datetime(date)
+    if dt is None:
+        raise ValueError(f"Could not parse date: {date}")
     timestamp = dt.timestamp()
     return Decimal(str(timestamp))
 
 
-def timestamp_to_human_date(timestamp: str):
+def timestamp_to_human_date(timestamp: str | int | float) -> str:
     # timestamp = Decimal(str(timestamp))
     human_date = datetime.fromtimestamp(float(timestamp)).strftime(
         "%Y-%m-%d %H:%M:%S %Z"
@@ -179,12 +186,12 @@ def day_month_year_to_datetime(
     day: int,
     month: int,
     year: int,
-):
+) -> datetime:
     return datetime(year=year, month=month, day=day)
 
 
-def humanize_history_dict(history):
-    human_history = {}
+def humanize_history_dict(history: dict[str, int | float]) -> dict[str, str | None]:
+    human_history: dict[str, str | None] = {}
     human_history["time_unchanged"] = seconds_duration_to_human_readable(
         history["time_unchanged"], ago=False
     )
@@ -192,50 +199,39 @@ def humanize_history_dict(history):
     return human_history
 
 
-def amtime(
-    paths: Sequence[Path] | None = None,
+def timestamp_to_human_duration(
+    timestamp: int | str | float,
+    short: bool = False,
     verbose: bool = False,
-) -> list[tuple[int, int]]:
-    """Get access and modification times for paths.
+) -> str:
+    """Convert a single timestamp (in seconds) to human-readable duration.
 
     Args:
-        paths: Sequence of Path objects to get amtime for
+        timestamp: Timestamp in seconds
+        short: Use short format for duration
         verbose: Enable verbose output
 
     Returns:
-        List of (atime_ns, mtime_ns) tuples
+        Human-readable duration string
     """
-    if paths:
-        iterator = paths
-    else:
-        iterator = unmp(
-            valid_types=[
-                bytes,
-            ],
-            verbose=verbose,
-        )
+    if verbose:
+        ic(timestamp)
 
-    results = []
-    for index, _mpobject in enumerate(iterator):
-        if verbose:
-            ic(index, _mpobject)
+    timestamp_int = int(timestamp)
+    human_duration = seconds_duration_to_human_readable(
+        timestamp_int, ago=False, short=short
+    )
+    if verbose:
+        ic(human_duration)
 
-        if isinstance(_mpobject, Path):
-            _path = _mpobject.resolve()
-        else:
-            _path = Path(os.fsdecode(_mpobject)).resolve()
+    if human_duration is None:
+        return ""
 
-        _amtime = get_amtime(_path)
-        if verbose:
-            ic(_amtime)
-
-        results.append(_amtime)
-
-    return results
+    return human_duration
 
 
-def timestamp_to_human_duration(
-    timestamps: Sequence[int | str],
+def timestamps_to_human_durations(
+    timestamps: Sequence[int | str | float],
     short: bool = False,
     verbose: bool = False,
 ) -> list[str]:
@@ -249,25 +245,18 @@ def timestamp_to_human_duration(
     Returns:
         List of human-readable duration strings
     """
-    results = []
-    for index, _timestamp in enumerate(timestamps):
-        if verbose:
-            ic(index, _timestamp)
-
-        _timestamp = int(_timestamp)
-        human_duration = seconds_duration_to_human_readable(
-            _timestamp, ago=False, short=short
+    results: list[str] = []
+    for timestamp in timestamps:
+        human_duration = timestamp_to_human_duration(
+            timestamp, short=short, verbose=verbose
         )
-        if verbose:
-            ic(human_duration)
-
         results.append(human_duration)
 
     return results
 
 
 def timestamps_to_human_dates(
-    timestamps: Sequence[int | str],
+    timestamps: Sequence[int | str | float],
     verbose: bool = False,
 ) -> list[str]:
     """Convert Unix timestamps to human-readable dates.
@@ -279,14 +268,12 @@ def timestamps_to_human_dates(
     Returns:
         List of human-readable date strings
     """
-    results = []
-    for index, _timestamp in enumerate(timestamps):
+    results: list[str] = []
+    for index, timestamp in enumerate(timestamps):
         if verbose:
-            ic(index, _timestamp)
+            ic(index, timestamp)
 
-        _timestamp = int(_timestamp)
-        human_timestamp = timestamp_to_human_date(_timestamp)
-
+        human_timestamp = timestamp_to_human_date(timestamp)
         results.append(human_timestamp)
 
     return results
@@ -305,14 +292,13 @@ def human_dates_to_timestamps(
     Returns:
         List of Unix timestamps as Decimal objects
     """
-    results = []
-    for index, _date in enumerate(human_dates):
+    results: list[Decimal] = []
+    for index, date in enumerate(human_dates):
         if verbose:
-            ic(index, _date)
+            ic(index, date)
 
-        _timestamp = human_date_to_timestamp(_date)
-
-        results.append(_timestamp)
+        timestamp = human_date_to_timestamp(date)
+        results.append(timestamp)
 
     return results
 
@@ -321,11 +307,11 @@ def human_dates_to_timestamps(
 @click_add_options(click_global_options)
 @click.pass_context
 def cli(
-    ctx,
+    ctx: click.Context,
     verbose_inf: bool,
     dict_output: bool,
     verbose: bool = False,
-):
+) -> None:
     ctx.ensure_object(dict)
     tty, verbose = tvicgvd(
         ctx=ctx,
@@ -351,8 +337,8 @@ def cli(
 @click_add_options(click_global_options)
 @click.pass_context
 def _amtime(
-    ctx,
-    paths: tuple[str, ...],
+    ctx: click.Context,
+    paths: tuple[Path, ...],
     verbose_inf: bool,
     dict_output: bool,
     verbose: bool = False,
@@ -368,6 +354,7 @@ def _amtime(
     if not verbose:
         ic.disable()
 
+    iterator: Sequence[Any]
     if paths:
         iterator = paths
     else:
@@ -401,8 +388,8 @@ def _amtime(
 @click_add_options(click_global_options)
 @click.pass_context
 def _timestamp_to_human_duration(
-    ctx,
-    timestamps: Sequence[str],
+    ctx: click.Context,
+    timestamps: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
     verbose: bool = False,
@@ -415,6 +402,7 @@ def _timestamp_to_human_duration(
         gvd=gvd,
     )
 
+    iterator: Sequence[Any]
     if timestamps:
         iterator = timestamps
     else:
@@ -432,9 +420,9 @@ def _timestamp_to_human_duration(
         if verbose:
             ic(index, _timestamp)
 
-        _timestamp = int(_timestamp)
+        _timestamp_int = int(_timestamp)
         human_duration = seconds_duration_to_human_readable(
-            _timestamp, ago=False, short=False
+            _timestamp_int, ago=False, short=False
         )
         ic(human_duration)
 
@@ -452,8 +440,8 @@ def _timestamp_to_human_duration(
 @click_add_options(click_global_options)
 @click.pass_context
 def _timestamp_to_human_date(
-    ctx,
-    timestamps: Sequence[str],
+    ctx: click.Context,
+    timestamps: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
     verbose: bool = False,
@@ -466,6 +454,7 @@ def _timestamp_to_human_date(
         gvd=gvd,
     )
 
+    iterator: Sequence[Any]
     if timestamps:
         iterator = timestamps
     else:
@@ -483,8 +472,8 @@ def _timestamp_to_human_date(
         if verbose:
             ic(index, _timestamp)
 
-        _timestamp = int(_timestamp)
-        human_timestamp = timestamp_to_human_date(_timestamp)
+        _timestamp_int = int(_timestamp)
+        human_timestamp = timestamp_to_human_date(_timestamp_int)
 
         output(
             human_timestamp,
@@ -500,7 +489,7 @@ def _timestamp_to_human_date(
 @click_add_options(click_global_options)
 @click.pass_context
 def _human_date_to_timestamp(
-    ctx,
+    ctx: click.Context,
     human_dates: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
@@ -514,6 +503,7 @@ def _human_date_to_timestamp(
         gvd=gvd,
     )
 
+    iterator: Sequence[Any]
     if human_dates:
         iterator = human_dates
     else:
