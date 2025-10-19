@@ -6,14 +6,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "timetool"
-version = "0.1"
+version = "0.0.1760905780"
 description = "Common time related functions"
 authors = [
     { name = "Justin Keogh", email = "github.com@v6y.net" },
 ]
 dependencies = [
     "asserttool @ git+https://github.com/jakeogh/asserttool",
-    "click",
     "click-auto-help @ git+https://github.com/jakeogh/click-auto-help",
     "clicktool @ git+https://github.com/jakeogh/clicktool",
     "dateparser",
