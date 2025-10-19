@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "timetool"
-version = "0.0.1760905780"
+version = "0.0.1760909918"
 description = "Common time related functions"
 authors = [
     { name = "Justin Keogh", email = "github.com@v6y.net" },
@@ -23,10 +23,8 @@ dependencies = [
     "timestamptool @ git+https://github.com/jakeogh/timestamptool",
     "unmp @ git+https://github.com/jakeogh/unmp",
 ]
+license = "ISC"
 requires-python = ">=3.11"
-
-[project.license]
-text = "ISC"
 
 [project.urls]
 Homepage = "https://github.com/jakeogh/timetool"
