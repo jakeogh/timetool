@@ -5,7 +5,7 @@ backend-path = ["."]
 
 [project]
 name = "timetool"
-version = "1!0.0.1761254326"
+version = "1!0.0.1761255044"
 description = "Common time related functions"
 authors = [
     { name = "Justin Keogh", email = "github.com@v6y.net" },
@@ -36,7 +36,7 @@ timetool = [
 ]
 
 [tool.pep508-url-version-backend]
-dependencies-indexed = ["asserttool>=1!0.0.1761250315", "click-auto-help>=0.0.1761041641", "clicktool>=0.0.1761033403", "dateparser", "eprint>=0.0.1761027667", "globalverbose>=0.0.1761031290", "humanize", "mptool>=0.0.1761032167", "timestamptool>=1!0.0.1761251768", "unmp>=0.0.1761031424"]
+dependencies-indexed = ["asserttool>=1!0.0.1761250315", "click-auto-help>=0.0.1761041641", "clicktool>=0.0.1761033403", "dateparser", "eprint>=0.0.1761027667", "globalverbose>=0.0.1761031290", "humanize", "mptool>=0.0.1761032167", "timestamptool>=1!0.0.1761254967", "unmp>=0.0.1761031424"]
 dependencies-git = [
 	"asserttool @ git+https://github.com/jakeogh/asserttool", 
 	"click-auto-help @ git+https://github.com/jakeogh/click-auto-help", 
