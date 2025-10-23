@@ -5,7 +5,7 @@ backend-path = ["."]
 
 [project]
 name = "timetool"
-version = "0.0.1761032704"
+version = "1!0.0.1761250734"
 description = "Common time related functions"
 authors = [
     { name = "Justin Keogh", email = "github.com@v6y.net" },
@@ -36,6 +36,17 @@ timetool = [
 ]
 
 [tool.pep508-url-version-backend]
-dependencies-indexed = []
-dependencies-git = ["asserttool @ git+https://github.com/jakeogh/asserttool", "click-auto-help @ git+https://github.com/jakeogh/click-auto-help", "clicktool @ git+https://github.com/jakeogh/clicktool", "dateparser", "eprint @ git+https://github.com/jakeogh/eprint", "globalverbose @ git+https://github.com/jakeogh/globalverbose", "humanize", "mptool @ git+https://github.com/jakeogh/mptool", "timestamptool @ git+https://github.com/jakeogh/timestamptool", "unmp @ git+https://github.com/jakeogh/unmp"]
+dependencies-indexed = ["asserttool>=1!0.0.1761250315", "click-auto-help>=0.0.1761041641", "clicktool>=0.0.1761033403", "dateparser", "eprint>=0.0.1761027667", "globalverbose>=0.0.1761031290", "humanize", "mptool>=0.0.1761032167", "timestamptool>=0.0.1761032277", "unmp>=0.0.1761031424"]
+dependencies-git = [
+	"asserttool @ git+https://github.com/jakeogh/asserttool", 
+	"click-auto-help @ git+https://github.com/jakeogh/click-auto-help", 
+	"clicktool @ git+https://github.com/jakeogh/clicktool", 
+	"dateparser", 
+	"eprint @ git+https://github.com/jakeogh/eprint", 
+	"globalverbose @ git+https://github.com/jakeogh/globalverbose", 
+	"humanize", 
+	"mptool @ git+https://github.com/jakeogh/mptool", 
+	"timestamptool @ git+https://github.com/jakeogh/timestamptool", 
+	"unmp @ git+https://github.com/jakeogh/unmp"
+]
 index-urls = ["jakeogh.github.io", "pip-index"]
