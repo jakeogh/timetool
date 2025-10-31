@@ -22,11 +22,7 @@ import click
 import dateparser
 from asserttool import ic
 from click_auto_help import AHGroup
-from clicktool import click_add_options
-from clicktool import click_global_options
-from clicktool import tvicgvd
 from eprint import eprint
-from globalverbose import gvd
 from humanize import naturaltime
 from humanize import precisedelta
 from mptool import output
@@ -297,22 +293,11 @@ def human_dates_to_timestamps(
 
 
 @click.group(no_args_is_help=True, cls=AHGroup)
-@click_add_options(click_global_options)
 @click.pass_context
 def cli(
     ctx: click.Context,
-    verbose_inf: bool,
-    dict_output: bool,
-    verbose: bool = False,
 ) -> None:
     ctx.ensure_object(dict)
-    tty, verbose = tvicgvd(
-        ctx=ctx,
-        verbose=verbose,
-        verbose_inf=verbose_inf,
-        ic=ic,
-        gvd=gvd,
-    )
 
 
 @cli.command("amtime")
@@ -327,25 +312,14 @@ def cli(
     ),
     nargs=-1,
 )
-@click_add_options(click_global_options)
 @click.pass_context
 def _amtime(
     ctx: click.Context,
     paths: tuple[Path, ...],
-    verbose_inf: bool,
-    dict_output: bool,
-    verbose: bool = False,
 ) -> None:
-    tty, verbose = tvicgvd(
-        ctx=ctx,
-        verbose=verbose,
-        verbose_inf=verbose_inf,
-        ic=ic,
-        gvd=gvd,
-    )
 
-    if not verbose:
-        ic.disable()
+    # if not verbose:
+    #    ic.disable()
 
     iterator: Sequence[Any]
     if paths:
@@ -369,30 +343,16 @@ def _amtime(
         output(
             _amtime,
             reason=None,
-            dict_output=dict_output,
-            tty=tty,
         )
 
 
 @cli.command("timestamp-to-human-duration")
 @click.argument("timestamps", type=str, nargs=-1)
-@click_add_options(click_global_options)
 @click.pass_context
 def _timestamp_to_human_duration(
     ctx: click.Context,
     timestamps: tuple[str, ...],
-    verbose_inf: bool,
-    dict_output: bool,
-    verbose: bool = False,
 ) -> None:
-    tty, verbose = tvicgvd(
-        ctx=ctx,
-        verbose=verbose,
-        verbose_inf=verbose_inf,
-        ic=ic,
-        gvd=gvd,
-    )
-
     iterator: Sequence[Any]
     if timestamps:
         iterator = timestamps
@@ -419,30 +379,16 @@ def _timestamp_to_human_duration(
         output(
             human_duration,
             reason=None,
-            dict_output=dict_output,
-            tty=tty,
         )
 
 
 @cli.command("timestamp-to-human-date")
 @click.argument("timestamps", type=str, nargs=-1)
-@click_add_options(click_global_options)
 @click.pass_context
 def _timestamp_to_human_date(
     ctx: click.Context,
     timestamps: tuple[str, ...],
-    verbose_inf: bool,
-    dict_output: bool,
-    verbose: bool = False,
 ) -> None:
-    tty, verbose = tvicgvd(
-        ctx=ctx,
-        verbose=verbose,
-        verbose_inf=verbose_inf,
-        ic=ic,
-        gvd=gvd,
-    )
-
     iterator: Sequence[Any]
     if timestamps:
         iterator = timestamps
@@ -452,7 +398,6 @@ def _timestamp_to_human_date(
                 str,
                 int,
             ],
-            verbose=verbose,
         )
     del timestamps
 
@@ -466,29 +411,16 @@ def _timestamp_to_human_date(
         output(
             human_timestamp,
             reason=None,
-            dict_output=dict_output,
-            tty=tty,
         )
 
 
 @cli.command("human-date-to-timestamp")
 @click.argument("human_dates", type=str, nargs=-1)
-@click_add_options(click_global_options)
 @click.pass_context
 def _human_date_to_timestamp(
     ctx: click.Context,
     human_dates: tuple[str, ...],
-    verbose_inf: bool,
-    dict_output: bool,
-    verbose: bool = False,
 ) -> None:
-    tty, verbose = tvicgvd(
-        ctx=ctx,
-        verbose=verbose,
-        verbose_inf=verbose_inf,
-        ic=ic,
-        gvd=gvd,
-    )
 
     iterator: Sequence[Any]
     if human_dates:
@@ -511,6 +443,4 @@ def _human_date_to_timestamp(
         output(
             _timestamp,
             reason=_date,
-            dict_output=dict_output,
-            tty=tty,
         )
