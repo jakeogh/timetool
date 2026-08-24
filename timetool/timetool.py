@@ -25,9 +25,7 @@ from click_auto_help import AHGroup
 from eprint import eprint
 from humanize import naturaltime
 from humanize import precisedelta
-from mptool import output
 from timestamptool import get_int_timestamp
-from unmp import unmp
 
 # from humanize import naturaldelta
 
@@ -321,15 +319,9 @@ def _amtime(
     # if not verbose:
     #    ic.disable()
 
-    iterator: Sequence[Any]
-    if paths:
-        iterator = paths
-    else:
-        iterator = unmp(
-            valid_types=[
-                bytes,
-            ],
-        )
+    if not paths:
+        raise SystemExit("give one or more paths")
+    iterator: Sequence[Any] = paths
     del paths
 
     index = 0
@@ -340,10 +332,7 @@ def _amtime(
         _amtime = get_amtime(_path)
         ic(_amtime)
 
-        output(
-            _amtime,
-            reason=None,
-        )
+        print(_amtime, flush=True)
 
 
 @cli.command("timestamp-to-human-duration")
@@ -353,16 +342,9 @@ def _timestamp_to_human_duration(
     ctx: click.Context,
     timestamps: tuple[str, ...],
 ) -> None:
-    iterator: Sequence[Any]
-    if timestamps:
-        iterator = timestamps
-    else:
-        iterator = unmp(
-            valid_types=[
-                str,
-                int,
-            ],
-        )
+    if not timestamps:
+        raise SystemExit("give one or more timestamps")
+    iterator: Sequence[Any] = timestamps
     del timestamps
 
     index = 0
@@ -376,10 +358,7 @@ def _timestamp_to_human_duration(
             short=False,
         )
 
-        output(
-            human_duration,
-            reason=None,
-        )
+        print(human_duration, flush=True)
 
 
 @cli.command("timestamp-to-human-date")
@@ -389,16 +368,9 @@ def _timestamp_to_human_date(
     ctx: click.Context,
     timestamps: tuple[str, ...],
 ) -> None:
-    iterator: Sequence[Any]
-    if timestamps:
-        iterator = timestamps
-    else:
-        iterator = unmp(
-            valid_types=[
-                str,
-                int,
-            ],
-        )
+    if not timestamps:
+        raise SystemExit("give one or more timestamps")
+    iterator: Sequence[Any] = timestamps
     del timestamps
 
     index = 0
@@ -408,10 +380,7 @@ def _timestamp_to_human_date(
         _timestamp_int = int(_timestamp)
         human_timestamp = timestamp_to_human_date(_timestamp_int)
 
-        output(
-            human_timestamp,
-            reason=None,
-        )
+        print(human_timestamp, flush=True)
 
 
 @cli.command("human-date-to-timestamp")
@@ -422,16 +391,9 @@ def _human_date_to_timestamp(
     human_dates: tuple[str, ...],
 ) -> None:
 
-    iterator: Sequence[Any]
-    if human_dates:
-        iterator = human_dates
-    else:
-        iterator = unmp(
-            valid_types=[
-                str,
-                int,
-            ],
-        )
+    if not human_dates:
+        raise SystemExit("give one or more dates")
+    iterator: Sequence[Any] = human_dates
     del human_dates
 
     index = 0
@@ -440,7 +402,4 @@ def _human_date_to_timestamp(
 
         _timestamp = human_date_to_timestamp(_date)
 
-        output(
-            _timestamp,
-            reason=_date,
-        )
+        print(_timestamp, flush=True)

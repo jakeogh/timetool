@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "timetool"
-version = "1!0.0.1787555740"
+version = "1!0.0.1787555747"
 description = "Common time related functions"
 authors = [
     { name = "Justin Keogh", email = "github.com@v6y.net" },
