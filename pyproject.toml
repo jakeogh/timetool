@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "timetool"
-version = "1!0.0.1787555747"
+version = "1!0.0.1788230094"
 description = "Common time related functions"
 authors = [
     { name = "Justin Keogh", email = "github.com@v6y.net" },
@@ -14,9 +14,9 @@ dependencies = [
     "humanize",
     "asserttool @ git+https://github.com/jakeogh/asserttool@4bd23a06c2161e488415acde89c29537e6720cc1",
     "click-auto-help @ git+https://github.com/jakeogh/click-auto-help@c53f57c78529a51ae9b03f579d7ee6f2d63ca03a",
-    "clicktool @ git+https://github.com/jakeogh/clicktool@7294ba6934225c028e48638fc0540bc57238ff00",
+    "clicktool @ git+https://github.com/jakeogh/clicktool@4bc98af7590652693aef664af7485acde40688c2",
     "eprint @ git+https://github.com/jakeogh/eprint@6ee1deca0c24b684eb5093247d6bd22e11f1b057",
-    "timestamptool @ git+https://github.com/jakeogh/timestamptool@2d9868ec701af7666827ce3f6866198f80f14b2a",
+    "timestamptool @ git+https://github.com/jakeogh/timestamptool@9812907317982046073e96dc2e909faaa491fe4c",
 ]
 license = "ISC"
 requires-python = ">=3.11"
